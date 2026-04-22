@@ -11,7 +11,7 @@ observeAuth(async (user) => {
         window.location.href= './../../login.html'
         return
     }
-    const profile = await getCurrentUserProfile(user.id)
+    const profile = await getCurrentUserProfile(user.uid)
 
     const resolvedName = profile?.name || 'Usuario'
     const resolvedEmail = profile?.email || '--'

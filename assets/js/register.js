@@ -9,12 +9,12 @@ const confirmPasswordInput = document.getElementById('confirmPassword')
 const registerBtn = document.getElementById('registerBtn')
 const successBox = document.getElementById('registerSuccess')
 
-form?.addEventListener('submit', (e) => {
+form?.addEventListener('submit', async (e) => {
     e.preventDefault()
     
     hideAlert('registerAlert')
-    successBox.classList.add('d-none')
-    successBox.textContent = ''
+    //successBox.classList.add('d-none')
+    //successBox.textContent = ''
 
     const name = nameInput.value.trim()
     const email = emailInput.value.trim()
@@ -27,7 +27,11 @@ form?.addEventListener('submit', (e) => {
         return
     }
 
-    //Agregar if para contraseña menor a 6 caracteres
+    // Validación de longitud de contraseña
+    if (password.length < 6) {
+        showAlert('registerAlert', 'La contraseña debe tener al menos 6 caracteres')
+        return
+    }
 
     if (password !== confirmPassword) {
         showAlert('registerAlert', 'Las contraseñas no son iguales')
@@ -35,19 +39,21 @@ form?.addEventListener('submit', (e) => {
     }
 
      try {
-        setButtonLoading(registerBtn, true, '<i class="bi bi-person-check me-2></i>Crear Cuenta',
+        setButtonLoading(registerBtn, true, '<i class="bi bi-person-check me-2"></i>Crear Cuenta',
         'Creando Cuenta...'
         )
         await registerUser({ name, email, password, favoriteCity })
 
-        successBox.textContent = 'Cuenta creada correctamente'
-        successBox.classList.remove('d-none')
+        //successBox.textContent = 'Cuenta creada correctamente'
+        //successBox.classList.remove('d-none')
+        
         setTimeout(() => {
-            window.location.href = './../../dashboard.html'
+            window.location.href = './../../login.html'
         }, 1200)
-        } catch (error) {
-            showAlert('registerAlert', getFirebaseErrorMessage(error))
-        } finally {
-            setButtonLoading(loginBtn, false, '<i class="bi bi-person-check me-2></i>Crear Cuenta')
-        }
+
+    } catch (error) {
+        showAlert('registerAlert', getFirebaseErrorMessage(error))
+    } finally {
+        setButtonLoading(registerBtn, false, '<i class="bi bi-person-check me-2"></i>Crear Cuenta')
+    }
 })

@@ -8,7 +8,7 @@
     doc,
     setDoc,
     getDoc,
-    serverTimeStamp
+    serverTimestamp
   } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
   import { auth, db } from "./firebase-config.js"
 
@@ -30,12 +30,12 @@ export async function registerUser({ name, email, password, favoriteCity }) {
     const credential = await createUserWithEmailAndPassword(auth, email, password)
     const user = credential.user
 
-    await setDoc(doc(db, "users", user.id), {
+    await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name,
         email,
         favoriteCity: favoriteCity || '',
-        createdAt: serverTimeStamp()
+        createdAt: serverTimestamp()
     })
 
     return user
@@ -47,8 +47,8 @@ export async function loginUser({ email, password }) {
 }
 
 export async function getCurrentUserProfile(uid) {
-    const doc = doc(db, 'users', uid)
-    const user = await getDoc(doc)
+    const docUser = doc(db, 'users', uid)
+    const user = await getDoc(docUser)
 
     if(!user.exists()) return null
 
